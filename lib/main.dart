@@ -1,18 +1,40 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:marsa_tours/views/login_view.dart';
 import 'package:marsa_tours/views/splash_view.dart';
+
 import 'package:marsa_tours/widgets/on_boarding_body.dart';
+import 'package:marsa_tours/widgets/select_language_body.dart';
 
-void main() {
-  runApp (DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => MarsaTours(), // Wrap your app
-  ),
+void main()
+
+
+  async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await EasyLocalization.ensureInitialized();
+
+
+
+  runApp (
+
+
+    EasyLocalization(
+        supportedLocales: [Locale('en', 'ar'),],
+        path: 'assets/translations', // <-- change the path of the translation files
+        fallbackLocale: Locale('en', 'US'),
+        child:  DevicePreview(
+          enabled: !kReleaseMode,
+          builder: (context) => MarsaTours(), // Wrap your app
+
+        ),
+    ),
   );
+  }
 
-}
+
 
 class MarsaTours extends StatelessWidget {
   const MarsaTours({super.key});
@@ -29,11 +51,14 @@ class MarsaTours extends StatelessWidget {
           return  MaterialApp(
       debugShowCheckedModeBanner: false,
             useInheritedMediaQuery: true,
-            locale: DevicePreview.locale(context),
+
             builder: DevicePreview.appBuilder,
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),
-      home: OnBoardingBody(),
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+      home: SelectLanguageBody(),
     );
   }
     );
